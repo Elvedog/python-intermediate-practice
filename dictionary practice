@@ -1,0 +1,15 @@
+mydict={1:"arrays",2:"sort",3:"adam",4:"random"}
+# mydict.pop(2)
+
+# mydictcopy =mydict
+# print(mydictcopy)
+
+# mydict["email"]="xyz@gmail.com"
+
+#mytuple = (2,7)
+#mydict2 = {mytuple:15}
+
+print(mydict2)
+print(mydict)
+
+
