@@ -1,0 +1,19 @@
+# sets are unordered mutable no duplicates
+myset ={1,2,3,2,1}
+myset2 = set("hello")
+#if you want an empty set you need to do it with the set method
+myset3= set()
+
+myset3.add(1)
+myset3.add(2)
+myset3.add(3)
+myset3.discard(3)
+#myset.pop() returns element and gives remaining set
+for number in myset:
+    print(number)
+if 1 in myset:
+    print("true")
+print(myset3)
+print(myset2)
+print(myset)
+
