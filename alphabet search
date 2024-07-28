@@ -3,6 +3,7 @@ shift = 3
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
 
 for char in text.lower():
+    # we use find not get since not using dictionary
     index = alphabet.find(char)
     print(char, index)
     new_index = index + shift
