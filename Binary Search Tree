@@ -1,104 +1,110 @@
 class TreeNode:
-
+    # Initializes a TreeNode with a key and pointers to the left and right children
     def __init__(self, key):
-        self.key = key
-        self.left = None
-        self.right = None
+        self.key = key        # Key of the node
+        self.left = None      # Left child of the node
+        self.right = None     # Right child of the node
 
+    # String representation of the TreeNode (for easy debugging/printing)
     def __str__(self):
         return str(self.key)
 
 class BinarySearchTree:
 
+    # Initializes an empty Binary Search Tree
     def __init__(self):
-        self.root = None
+        self.root = None  # The root of the tree starts as None (empty tree)
 
+    # Recursive helper function to insert a new key into the subtree rooted at 'node'
     def _insert(self, node, key):
         if node is None:
-            return TreeNode(key)
+            return TreeNode(key)  # If the node is None, insert the new key here
 
         if key < node.key:
+            # If the key to be inserted is smaller, insert it in the left subtree
             node.left = self._insert(node.left, key)
         elif key > node.key:
-
+            # If the key to be inserted is larger, insert it in the right subtree
             node.right = self._insert(node.right, key)
-        return node
+        return node  # Return the unchanged node pointer
 
+    # Public function to insert a new key into the BST
     def insert(self, key):
-        self.root = self._insert(self.root, key)
+        self.root = self._insert(self.root, key)  # Insert the key starting from the root
         
+    # Recursive helper function to search for a key in the subtree rooted at 'node'
     def _search(self, node, key):
         if node is None or node.key == key:
-            return node
-        if key < node.key:
-            return self._search(node.left, key)
-        return self._search(node.right, key)
-    
-    def search(self, key):
-        return self._search(self.root, key)
+            return node  # Return the node if found, or None if the key is not present
 
+        if key < node.key:
+            # If the key to be searched is smaller, search in the left subtree
+            return self._search(node.left, key)
+        return self._search(node.right, key)  # Otherwise, search in the right subtree
+    
+    # Public function to search for a key in the BST
+    def search(self, key):
+        return self._search(self.root, key)  # Search for the key starting from the root
+
+    # Recursive helper function to delete a key from the subtree rooted at 'node'
     def _delete(self, node, key):
         if node is None:
-            return node
+            return node  # If the node is None, return None (key not found)
         if key < node.key:
+            # If the key to be deleted is smaller, delete from the left subtree
             node.left = self._delete(node.left, key)
         elif key > node.key:
+            # If the key to be deleted is larger, delete from the right subtree
             node.right = self._delete(node.right, key) 
         else:
+            # Node to be deleted is found
             if node.left is None:
-                return node.right
+                return node.right  # If no left child, replace with right child
             elif node.right is None:
-                return node.left   
+                return node.left   # If no right child, replace with left child
             
+            # Node with two children: Get the inorder successor (smallest in the right subtree)
             node.key = self._min_value(node.right)
+            # Delete the inorder successor
             node.right = self._delete(node.right, node.key)   
         
-        return node
+        return node  # Return the modified node
 
+    # Public function to delete a key from the BST
     def delete(self, key):
-        self.root = self._delete(self.root, key)
+        self.root = self._delete(self.root, key)  # Delete the key starting from the root
 
+    # Helper function to find the minimum value node in a subtree
     def _min_value(self, node):
         while node.left is not None:
-            node = node.left
-        return node.key
+            node = node.left  # Keep moving to the left until the leftmost node is found
+        return node.key  # Return the key of the leftmost node
 
+    # Recursive helper function for inorder traversal
     def _inorder_traversal(self, node, result):
         if node:
-            self._inorder_traversal(node.left, result)
-            result.append(node.key)
-            self._inorder_traversal(node.right, result)
+            self._inorder_traversal(node.left, result)  # Traverse the left subtree
+            result.append(node.key)                     # Visit the node
+            self._inorder_traversal(node.right, result) # Traverse the right subtree
 
+    # Public function to perform an inorder traversal of the BST
     def inorder_traversal(self):
         result = []
-        self._inorder_traversal(self.root, result)
-        return result
+        self._inorder_traversal(self.root, result)  # Start inorder traversal from the root
+        return result  # Return the list of keys in inorder
+
+# Example usage
 bst = BinarySearchTree()
-nodes = [50, 30, 20, 40, 70, 60, 80]
+nodes = [50, 30, 20, 40, 70, 60, 80]  # List of nodes to insert
 
 for node in nodes:
-    bst.insert(node)
+    bst.insert(node)  # Insert each node into the BST
 
-print('Search for 80:', bst.search(80))
+print('Search for 80:', bst.search(80))  # Search for the node with key 80
 
-print("Inorder traversal:", bst.inorder_traversal())
+print("Inorder traversal:", bst.inorder_traversal())  # Perform and print inorder traversal
 
-bst.delete(40)
+bst.delete(40)  # Delete the node with key 40
 
-print("Search for 40:", bst.search(40))
-print('Inorder traversal after deleting 40:',bst.inorder_traversal())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+print("Search for 40:", bst.search(40))  # Search for the node with key 40 (should be None)
+print('Inorder traversal after deleting 40:', bst.inorder_traversal())  # Inorder traversal after deletion
