@@ -1,22 +1,40 @@
+# Define the number of disks to be moved
 NUMBER_OF_DISKS = 5
-A = list(range(NUMBER_OF_DISKS, 0, -1))
-B = []
-C = []
+
+# Initialize the three rods (A, B, C)
+# Rod A starts with all disks arranged in decreasing size order, largest at the bottom
+A = list(range(NUMBER_OF_DISKS, 0, -1))  # [5, 4, 3, 2, 1]
+B = []  # Rod B starts empty
+C = []  # Rod C starts empty
 
 def move(n, source, auxiliary, target):
+    """
+    Recursive function to solve the Tower of Hanoi problem.
+
+    Parameters:
+    - n: The number of disks to move.
+    - source: The rod from which to move disks (initially contains all disks).
+    - auxiliary: The rod used as a helper to facilitate moving disks.
+    - target: The rod to which disks need to be moved.
+    """
+
+    # Base case: If there are no disks to move, just return
     if n <= 0:
         return
-# move n - 1 disks from source to auxiliary, so they are out of the way
+
+    # Recursive step 1: Move n-1 disks from source to auxiliary, using target as a temporary rod
+    # This step frees up the nth disk (the largest one) on the source rod
     move(n - 1, source, target, auxiliary)
-            
-# move the nth disk from source to target
+    
+    # Move the nth disk (the largest disk in this recursive call) from source to target
     target.append(source.pop())
-            
-# display our progress
+    
+    # Display the current state of all rods after each move
     print(A, B, C, '\n')
-            
-# move the n - 1 disks that we left on auxiliary onto target
-    move(n - 1,  auxiliary, source, target)
-                
-# initiate call from source A to target C with auxiliary B
+    
+    # Recursive step 2: Move the n-1 disks from auxiliary to target, using source as a temporary rod
+    # This completes the transfer of the n-1 disks onto the target rod
+    move(n - 1, auxiliary, source, target)
+
+# Start the process: Move all disks from rod A (source) to rod C (target), using rod B (auxiliary)
 move(NUMBER_OF_DISKS, A, B, C)
