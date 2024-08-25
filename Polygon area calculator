@@ -1,0 +1,102 @@
+class Rectangle:
+    # Constructor to initialize the Rectangle object with width and height
+    def __init__(self, width, height):
+        self.width = width  # Initialize the width attribute
+        self.height = height  # Initialize the height attribute
+
+    # Method to set a new value for the width
+    def set_width(self, width):
+        self.width = width  # Update the width attribute
+
+    # Method to set a new value for the height
+    def set_height(self, height):
+        self.height = height  # Update the height attribute
+
+    # Method to calculate the area of the rectangle
+    def get_area(self):
+        return self.width * self.height  # Area = width * height
+
+    # Method to calculate the perimeter of the rectangle
+    def get_perimeter(self):
+        return 2 * (self.width + self.height)  # Perimeter = 2 * (width + height)
+
+    # Method to calculate the diagonal of the rectangle using the Pythagorean theorem
+    def get_diagonal(self):
+        return (self.width ** 2 + self.height ** 2) ** 0.5  # Diagonal = sqrt(width^2 + height^2)
+
+    # Method to return a string representation of the rectangle using '*' characters
+    def get_picture(self):
+        # Check if the width or height is too large to draw
+        if self.width > 50 or self.height > 50:
+            return "Too big for picture."
+        
+        picture = ""  # Initialize an empty string to build the picture
+        # Loop through the height and add a line of '*' for each row
+        for _ in range(self.height):
+            picture += "*" * self.width + "\n"  # Add a row of '*' followed by a newline character
+        return picture  # Return the complete picture
+
+    # Method to determine how many times another shape can fit inside this rectangle
+    def get_amount_inside(self, shape):
+        # Calculate the number of times the other shape's area fits inside this rectangle's area
+        return self.get_area() // shape.get_area()
+
+    # Method to return a string representation of the Rectangle object
+    def __str__(self):
+        return f"Rectangle(width={self.width}, height={self.height})"  # Format as 'Rectangle(width=x, height=y)'
+
+class Square(Rectangle):
+    # Constructor to initialize the Square object with side length
+    def __init__(self, side):
+        # Call the Rectangle constructor with both width and height set to the side length
+        super().__init__(side, side)
+
+    # Method to set a new value for the side length (affecting both width and height)
+    def set_side(self, side):
+        self.width = side  # Update the width to the new side length
+        self.height = side  # Update the height to the new side length
+
+    # Override the set_width method to ensure both width and height are updated for a square
+    def set_width(self, width):
+        self.set_side(width)  # Call set_side to update both width and height
+
+    # Override the set_height method to ensure both width and height are updated for a square
+    def set_height(self, height):
+        self.set_side(height)  # Call set_side to update both width and height
+
+    # Method to return a string representation of the Square object
+    def __str__(self):
+        return f"Square(side={self.width})"  # Format as 'Square(side=x)'
+
+# Example usage:
+# Create a Rectangle object
+rect = Rectangle(10, 5)
+print(rect)  # Output: Rectangle(width=10, height=5)
+
+# Get the area and perimeter of the rectangle
+print(rect.get_area())         # Output: 50
+print(rect.get_perimeter())    # Output: 30
+
+# Get the picture of the rectangle
+print(rect.get_picture())
+# Output:
+# **********
+# **********
+# **********
+# **********
+# **********
+
+# Create a Square object
+sq = Square(9)
+print(sq)  # Output: Square(side=9)
+
+# Get the area and perimeter of the square
+print(sq.get_area())           # Output: 81
+print(sq.get_perimeter())      # Output: 36
+
+# Set a new side for the square and print it
+sq.set_side(4)
+print(sq)  # Output: Square(side=4)
+
+# Check how many times the square can fit inside the rectangle
+print(rect.get_amount_inside(sq))  # Output: 6
