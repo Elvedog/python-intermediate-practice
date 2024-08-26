@@ -1,0 +1,100 @@
+import copy
+import random
+
+class Hat:
+    def __init__(self, **kwargs):
+        """
+        Initializes the Hat object with a variable number of balls.
+        The balls are passed as keyword arguments with the color as the key and the
+        number of balls as the value.
+        
+        Example: Hat(red=3, blue=2) creates a hat with 3 red balls and 2 blue balls.
+        """
+        self.contents = []  # Initialize the contents list to hold the balls in the hat
+        # Iterate over the keyword arguments to populate the hat
+        for color, count in kwargs.items():
+            self.contents.extend([color] * count)  # Add 'count' number of 'color' balls to the contents
+
+    def draw(self, num_balls):
+        """
+        Draw a specified number of balls randomly from the hat.
+
+        Arguments:
+        - num_balls: The number of balls to draw from the hat.
+
+        Returns:
+        - A list of drawn balls. If the number of balls to draw exceeds the number of balls
+          in the hat, return all the balls in the hat.
+        """
+        # If the number of balls to draw exceeds the number in the hat, return all the balls
+        if num_balls >= len(self.contents):
+            drawn_balls = self.contents[:]  # Copy all balls in the hat to the drawn_balls list
+            self.contents = []  # Empty the hat's contents to simulate the balls being removed
+            return drawn_balls
+
+        # Otherwise, randomly sample the specified number of balls from the contents
+        drawn_balls = random.sample(self.contents, num_balls)
+
+        # Remove each drawn ball from the hat's contents
+        for ball in drawn_balls:
+            self.contents.remove(ball)
+
+        return drawn_balls  # Return the list of drawn balls
+
+
+def experiment(hat, expected_balls, num_balls_drawn, num_experiments):
+    """
+    Perform a number of experiments to estimate the probability of drawing a specific
+    combination of balls from the hat.
+
+    Arguments:
+    - hat: A Hat object containing the initial set of balls.
+    - expected_balls: A dictionary specifying the exact group of balls to attempt to draw.
+    - num_balls_drawn: The number of balls to draw out of the hat in each experiment.
+    - num_experiments: The number of experiments to perform.
+
+    Returns:
+    - The probability of drawing the expected balls as a float.
+    """
+    successful_experiments = 0  # Initialize a counter for successful experiments
+
+    # Perform the experiment num_experiments times
+    for _ in range(num_experiments):
+        # Make a copy of the hat to draw from without modifying the original
+        experiment_hat = copy.deepcopy(hat)
+        # Draw the specified number of balls
+        drawn_balls = experiment_hat.draw(num_balls_drawn)
+        # Create a dictionary to count the occurrences of each ball color in the drawn balls
+        drawn_count = {}
+        for ball in drawn_balls:
+            if ball in drawn_count:
+                drawn_count[ball] += 1  # Increment the count if the ball color is already in the dictionary
+            else:
+                drawn_count[ball] = 1  # Initialize the count if it's the first occurrence of the ball color
+
+        # Check if the drawn balls contain at least the expected number of each ball color
+        success = True  # Assume success until proven otherwise
+        for ball, count in expected_balls.items():
+            # If the number of drawn balls of a color is less than the expected count, mark as unsuccessful
+            if drawn_count.get(ball, 0) < count:
+                success = False
+                break  # No need to check further if one condition fails
+
+        # If the draw was successful, increment the counter
+        if success:
+            successful_experiments += 1
+
+    # Calculate and return the probability as the number of successful experiments divided by
+    # the total number of experiments
+    probability = successful_experiments / num_experiments
+    return probability
+
+
+# Example usage:
+# Create a hat with 5 blue balls, 4 red balls, and 2 green balls
+hat = Hat(blue=5, red=4, green=2)
+# Run the experiment to estimate the probability of drawing at least 1 red ball and 2 green balls
+# in 4 draws, over 1000 experiments
+probability = experiment(hat, {"red": 1, "green": 2}, num_balls_drawn=4, num_experiments=1000)
+# Print the estimated probability
+print("Estimated Probability:", probability)
